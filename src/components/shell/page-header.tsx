@@ -8,18 +8,22 @@ export function PageHeader({
   icon,
   actions,
   breadcrumb,
+  fluid,
   className,
 }: {
   title: ReactNode;
   icon?: ReactNode;
   actions?: ReactNode;
   breadcrumb?: { label: string; href: string };
+  /** Ocupa a largura toda mesmo com o menu recolhido (pipeline), em vez de seguir a largura fixa do conteúdo */
+  fluid?: boolean;
   className?: string;
 }) {
   return (
     <header
       className={cn(
         "sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-line bg-panel/90 px-4 backdrop-blur-md sm:px-6 lg:rounded-t-xl",
+        !fluid && "lg:px-page",
         className,
       )}
     >
@@ -44,10 +48,10 @@ export function PageHeader({
   );
 }
 
-/** Título editorial em duas cores (linha escura + linha suave), como nos headlines da ROX. */
+/** Título da página em duas cores (linha escura + linha suave), como nos headlines da ROX. Usado no Início, que não tem cabeçalho. */
 export function DisplayTitle({ lead, muted, className }: { lead: ReactNode; muted?: ReactNode; className?: string }) {
   return (
-    <h2 className={cn("font-display text-[30px] leading-[1.08] text-ink sm:text-[36px]", className)}>
+    <h1 className={cn("font-display text-[24px] leading-[1.15] text-ink sm:text-[28px]", className)}>
       {lead}
       {muted ? (
         <>
@@ -55,6 +59,6 @@ export function DisplayTitle({ lead, muted, className }: { lead: ReactNode; mute
           <span className="text-ink-4">{muted}</span>
         </>
       ) : null}
-    </h2>
+    </h1>
   );
 }

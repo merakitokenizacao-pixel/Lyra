@@ -143,7 +143,7 @@ async function FunnelsContent({ searchParams }: { searchParams: SearchParams }) 
           className="py-20"
         />
       ) : (
-        <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">
+        <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-6 lg:px-page xl:grid-cols-3">
           {rows.map((funnel) => (
             <FunnelCard key={funnel.id} funnel={funnel} />
           ))}
@@ -242,7 +242,7 @@ function FunnelCard({ funnel }: { funnel: FunnelRow }) {
 
 function ListSkeleton() {
   return (
-    <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">
+    <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-6 lg:px-page xl:grid-cols-3">
       {Array.from({ length: 3 }).map((_, i) => (
         <Skeleton key={i} className="h-[17rem] w-full rounded-xl" />
       ))}

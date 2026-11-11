@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Target } from "lucide-react";
 import { getContext } from "@/lib/auth";
-import { firstParam, getMembers, getStages, sanitizeSearch, type SearchParams } from "@/lib/queries";
+import { firstParam, getMembers, getPipelines, sanitizeSearch, type SearchParams } from "@/lib/queries";
 import { sourceLabel, type LeadTemperature } from "@/lib/constants";
 import { formatDate, formatMoney, formatNumber } from "@/lib/format";
 import { PageHeader } from "@/components/shell/page-header";
@@ -56,8 +56,10 @@ async function LeadsContent({ searchParams }: { searchParams: SearchParams }) {
   if (temperature) query = query.eq("temperature", temperature as LeadTemperature);
   if (source) query = query.eq("source", source);
 
-  const [{ data: leads }, stages, members] = await Promise.all([query, getStages(), getMembers()]);
-  const stageById = new Map(stages.map((s) => [s.id, s]));
+  const [{ data: leads }, pipelines, members] = await Promise.all([query, getPipelines(), getMembers()]);
+  const stageById = new Map(pipelines.flatMap((p) => p.stages.map((s) => [s.id, { ...s, pipeline: p.name }] as const)));
+  // Com mais de um pipeline, cada etapa mostra de qual pipeline é
+  const showPipeline = pipelines.length > 1;
   const memberById = new Map(members.map((m) => [m.id, m]));
   const rows = leads ?? [];
   const total = rows.reduce((sum, l) => sum + Number(l.estimated_value), 0);
@@ -65,7 +67,10 @@ async function LeadsContent({ searchParams }: { searchParams: SearchParams }) {
 
   return (
     <>
-      <LeadFilters values={{ q, stage, temperature, source }} stages={stages.map((s) => ({ id: s.id, name: s.name }))} />
+      <LeadFilters
+        values={{ q, stage, temperature, source }}
+        stageGroups={pipelines.map((p) => ({ pipeline: p.name, stages: p.stages.map((s) => ({ id: s.id, name: s.name })) }))}
+      />
       {rows.length === 0 ? (
         <EmptyState
           icon={<DotGlyph name="leads" className="size-12" />}
@@ -79,7 +84,7 @@ async function LeadsContent({ searchParams }: { searchParams: SearchParams }) {
         />
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[880px] text-[13px]">
+          <table className="w-full min-w-[880px] text-[13px] lg:page-table">
             <thead>
               <tr className="border-b border-line text-left text-xs text-ink-3">
                 <th className="py-2.5 pr-3 pl-4 font-medium sm:pl-6">Lead</th>
@@ -114,6 +119,7 @@ async function LeadsContent({ searchParams }: { searchParams: SearchParams }) {
                         {s ? <StageBadge name={s.name} color={s.color} /> : "—"}
                         {lead.converted_client_id ? <Badge tone="success">Cliente</Badge> : null}
                       </span>
+                      {showPipeline && s ? <p className="mt-1 max-w-48 truncate text-xs text-ink-3">{s.pipeline}</p> : null}
                     </td>
                     <td className="px-3 py-2.5">
                       <BantDots lead={lead} />
@@ -141,7 +147,7 @@ async function LeadsContent({ searchParams }: { searchParams: SearchParams }) {
               })}
             </tbody>
           </table>
-          <p className="border-t border-line px-4 py-3 text-xs text-ink-3 sm:px-6">
+          <p className="border-t border-line px-4 py-3 text-xs text-ink-3 sm:px-6 lg:px-page">
             {formatNumber(rows.length)} {rows.length === 1 ? "lead" : "leads"} · {formatMoney(total, "round")} em valor estimado
           </p>
         </div>
@@ -153,12 +159,12 @@ async function LeadsContent({ searchParams }: { searchParams: SearchParams }) {
 function ListSkeleton() {
   return (
     <div className="flex flex-col">
-      <div className="flex gap-2 border-b border-line px-6 py-3">
+      <div className="flex gap-2 border-b border-line px-4 py-3 sm:px-6 lg:px-page">
         <Skeleton className="h-8 w-72" />
         <Skeleton className="h-8 w-44" />
         <Skeleton className="h-8 w-36" />
       </div>
-      <div className="flex flex-col gap-3 px-6 py-4">
+      <div className="flex flex-col gap-3 px-4 py-4 sm:px-6 lg:px-page">
         {Array.from({ length: 8 }).map((_, i) => (
           <Skeleton key={i} className="h-9 w-full" />
         ))}

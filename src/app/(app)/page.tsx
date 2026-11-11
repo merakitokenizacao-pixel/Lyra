@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import { ArrowDownRight, ArrowRight, ArrowUpRight, CheckSquare, FileText, House, Sparkles } from "lucide-react";
+import { ArrowDownRight, ArrowRight, ArrowUpRight, CheckSquare, FileText, Sparkles } from "lucide-react";
 import { getContext } from "@/lib/auth";
 import { getPipelines } from "@/lib/queries";
 import {
@@ -12,34 +12,23 @@ import {
 } from "@/lib/constants";
 import { callName, formatDate, formatDateTime, formatMoney, formatNumber, formatPercent, greeting, isOverdue, isoDaysAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { PageHeader, DisplayTitle } from "@/components/shell/page-header";
+import { DisplayTitle } from "@/components/shell/page-header";
 import { Card, CardHeader, EmptyState, Skeleton } from "@/components/ui/misc";
 import { Chip, DotBadge } from "@/components/ui/badge";
 import { DotGlyph } from "@/components/brand";
 import { Timeline } from "@/components/activity/timeline";
 import { TaskCheck } from "@/components/activity/task-check";
-import { NewLeadButton, NewLeadButtonFallback } from "./leads/new-lead-button";
 import { StageBars, StatusBar } from "./dashboard-charts";
 import { NameNudge } from "./name-nudge";
 
 export const metadata: Metadata = { title: "Início" };
 
+// Sem cabeçalho: o menu lateral já mostra a página, e a saudação faz o papel de título
 export default function DashboardPage() {
   return (
-    <>
-      <PageHeader
-        title="Início"
-        icon={<House />}
-        actions={
-          <Suspense fallback={<NewLeadButtonFallback />}>
-            <NewLeadButton />
-          </Suspense>
-        }
-      />
-      <Suspense fallback={<DashboardSkeleton />}>
-        <Dashboard />
-      </Suspense>
-    </>
+    <Suspense fallback={<DashboardSkeleton />}>
+      <Dashboard />
+    </Suspense>
   );
 }
 
@@ -156,7 +145,8 @@ async function Dashboard() {
   const name = callName(ctx.profile);
 
   return (
-    <div className="flex flex-col gap-6 px-4 py-7 sm:px-6 lg:py-8">
+    // No desktop, a primeira linha da saudação fica na altura do nome Lyro no menu lateral
+    <div className="flex flex-col gap-6 px-4 pt-5 pb-8 sm:px-6 lg:px-page lg:pt-3">
       <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         {name ? (
           <DisplayTitle lead={`${greeting()}, ${name}.`} muted="Este é o pulso da sua operação hoje." />
@@ -386,10 +376,10 @@ async function Dashboard() {
 
 function DashboardSkeleton() {
   return (
-    <div className="flex flex-col gap-6 px-6 py-8">
+    <div className="flex flex-col gap-6 px-4 pt-5 pb-8 sm:px-6 lg:px-page lg:pt-3">
       <div className="flex flex-col gap-2">
-        <Skeleton className="h-9 w-72" />
-        <Skeleton className="h-9 w-96 max-w-full" />
+        <Skeleton className="h-7 w-60" />
+        <Skeleton className="h-7 w-80 max-w-full" />
       </div>
       <Skeleton className="h-[74px] w-full rounded-xl" />
       <div className="grid gap-4 lg:grid-cols-2">

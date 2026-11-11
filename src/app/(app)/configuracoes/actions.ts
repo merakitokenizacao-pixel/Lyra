@@ -2,8 +2,19 @@
 
 import { refresh } from "next/cache";
 import { getContext, isAdmin } from "@/lib/auth";
-import { STAGE_COLORS, type MemberRole, type StageCategory, type StageColor } from "@/lib/constants";
+import {
+  DEFAULT_PIPELINE_STAGES,
+  STAGE_CATEGORY_LABEL,
+  STAGE_COLORS,
+  type MemberRole,
+  type StageCategory,
+  type StageColor,
+} from "@/lib/constants";
 import { errorMessage, str, type ActionResult } from "@/lib/utils";
+
+type Context = Awaited<ReturnType<typeof getContext>>;
+
+const UUID = /^[0-9a-f-]{36}$/i;
 
 async function adminContext() {
   const ctx = await getContext();
@@ -93,6 +104,214 @@ export async function saveStages(pipelineId: string, stages: StageInput[]): Prom
 
   refresh();
   return { ok: true, message: "Etapas salvas" };
+}
+
+/* ------------------------------------------------------------------
+   Pipelines: cada um é um quadro com as próprias etapas. O padrão abre
+   primeiro no quadro e alimenta o funil do Início.
+   ------------------------------------------------------------------ */
+
+/** Pipeline da empresa ativa, ou null quando o id não é dela. */
+async function ownPipeline(ctx: Context, id: string | null) {
+  if (!id || !UUID.test(id)) return null;
+  const { data } = await ctx.supabase
+    .from("pipelines")
+    .select("id, name, is_default")
+    .eq("id", id)
+    .eq("organization_id", ctx.org.id)
+    .maybeSingle();
+  return data;
+}
+
+function pipelineName(value: string | null) {
+  return value?.replace(/\s+/g, " ").trim().slice(0, 80) || null;
+}
+
+/** Nomes iguais (sem diferenciar maiúsculas) confundiriam a lista e os filtros por etapa. */
+async function pipelineNameTaken(ctx: Context, name: string, exceptId?: string) {
+  const { data } = await ctx.supabase.from("pipelines").select("id, name").eq("organization_id", ctx.org.id);
+  const key = name.toLocaleLowerCase("pt-BR");
+  return (data ?? []).some((p) => p.id !== exceptId && p.name.trim().toLocaleLowerCase("pt-BR") === key);
+}
+
+/**
+ * Cria um pipeline com as etapas do modelo padrão de vendas ou com as de outro pipeline da
+ * empresa (`template` = id dele). Entra no fim da lista e não vira o padrão.
+ */
+export async function createPipeline(formData: FormData): Promise<ActionResult> {
+  const { ctx, denied } = await adminContext();
+  if (denied) return denied;
+  const name = pipelineName(str(formData, "name"));
+  if (!name) return { ok: false, error: "Dê um nome ao pipeline." };
+  if (await pipelineNameTaken(ctx, name)) return { ok: false, error: "Já existe um pipeline com esse nome." };
+
+  let stages: { name: string; color: string; category: StageCategory }[] = DEFAULT_PIPELINE_STAGES;
+  const template = str(formData, "template");
+  if (template && template !== "standard") {
+    const source = await ownPipeline(ctx, template);
+    if (!source) return { ok: false, error: "O pipeline escolhido como modelo não existe mais." };
+    const { data, error } = await ctx.supabase
+      .from("pipeline_stages")
+      .select("name, color, category")
+      .eq("pipeline_id", source.id)
+      .eq("organization_id", ctx.org.id)
+      .order("position");
+    if (error) return { ok: false, error: errorMessage(error) };
+    if (data.length > 0) stages = data;
+  }
+
+  const { data: last } = await ctx.supabase
+    .from("pipelines")
+    .select("position")
+    .eq("organization_id", ctx.org.id)
+    .order("position", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const { data: created, error } = await ctx.supabase
+    .from("pipelines")
+    .insert({ organization_id: ctx.org.id, name, position: (last?.position ?? -1) + 1 })
+    .select("id")
+    .single();
+  if (error) return { ok: false, error: errorMessage(error) };
+
+  const { error: stagesError } = await ctx.supabase.from("pipeline_stages").insert(
+    stages.map((s, position) => ({
+      organization_id: ctx.org.id,
+      pipeline_id: created.id,
+      name: s.name,
+      color: s.color,
+      category: s.category,
+      position,
+    })),
+  );
+  if (stagesError) {
+    // Sem etapas o quadro fica inútil: desfaz o pipeline
+    await ctx.supabase.from("pipelines").delete().eq("id", created.id).eq("organization_id", ctx.org.id);
+    return { ok: false, error: errorMessage(stagesError) };
+  }
+
+  refresh();
+  return { ok: true, id: created.id, message: "Pipeline criado" };
+}
+
+export async function renamePipeline(formData: FormData): Promise<ActionResult> {
+  const { ctx, denied } = await adminContext();
+  if (denied) return denied;
+  const pipeline = await ownPipeline(ctx, str(formData, "id"));
+  if (!pipeline) return { ok: false, error: "Pipeline não encontrado." };
+  const name = pipelineName(str(formData, "name"));
+  if (!name) return { ok: false, error: "Dê um nome ao pipeline." };
+  if (name === pipeline.name) return { ok: true };
+  if (await pipelineNameTaken(ctx, name, pipeline.id)) return { ok: false, error: "Já existe um pipeline com esse nome." };
+
+  const { error } = await ctx.supabase.from("pipelines").update({ name }).eq("id", pipeline.id).eq("organization_id", ctx.org.id);
+  if (error) return { ok: false, error: errorMessage(error) };
+  refresh();
+  return { ok: true, message: "Pipeline renomeado" };
+}
+
+export async function setDefaultPipeline(id: string): Promise<ActionResult> {
+  const { ctx, denied } = await adminContext();
+  if (denied) return denied;
+  const pipeline = await ownPipeline(ctx, id);
+  if (!pipeline) return { ok: false, error: "Pipeline não encontrado." };
+  if (pipeline.is_default) return { ok: true };
+
+  // Marca o novo antes de desmarcar os outros: se algo falhar no meio, nunca fica sem padrão
+  const { error } = await ctx.supabase
+    .from("pipelines")
+    .update({ is_default: true })
+    .eq("id", pipeline.id)
+    .eq("organization_id", ctx.org.id);
+  if (error) return { ok: false, error: errorMessage(error) };
+  const { error: othersError } = await ctx.supabase
+    .from("pipelines")
+    .update({ is_default: false })
+    .eq("organization_id", ctx.org.id)
+    .eq("is_default", true)
+    .neq("id", pipeline.id);
+  if (othersError) return { ok: false, error: errorMessage(othersError) };
+
+  refresh();
+  return { ok: true, message: `“${pipeline.name}” agora é o pipeline padrão` };
+}
+
+/**
+ * Exclui um pipeline e as etapas dele. Os leads vão antes para `targetId`: cada um entra na etapa
+ * de mesmo nome e tipo no destino ou, se não houver, na primeira etapa do mesmo tipo (em
+ * andamento, ganho ou perdido).
+ */
+export async function deletePipeline(id: string, targetId: string | null): Promise<ActionResult> {
+  const { ctx, denied } = await adminContext();
+  if (denied) return denied;
+  const pipeline = await ownPipeline(ctx, id);
+  if (!pipeline) return { ok: false, error: "Pipeline não encontrado." };
+  if (pipeline.is_default) {
+    return { ok: false, error: "Este é o pipeline padrão. Defina outro como padrão antes de excluir." };
+  }
+
+  const { data: leads, error: leadsError } = await ctx.supabase
+    .from("leads")
+    .select("stage_id")
+    .eq("pipeline_id", pipeline.id)
+    .eq("organization_id", ctx.org.id)
+    .limit(10000);
+  if (leadsError) return { ok: false, error: errorMessage(leadsError) };
+
+  let movedTo: string | null = null;
+  if (leads.length > 0) {
+    const target = targetId && targetId !== pipeline.id ? await ownPipeline(ctx, targetId) : null;
+    if (!target) return { ok: false, error: "Escolha para qual pipeline os leads vão." };
+
+    const { data: stages, error: stagesError } = await ctx.supabase
+      .from("pipeline_stages")
+      .select("id, pipeline_id, name, category")
+      .in("pipeline_id", [pipeline.id, target.id])
+      .eq("organization_id", ctx.org.id)
+      .order("position");
+    if (stagesError) return { ok: false, error: errorMessage(stagesError) };
+
+    const nameKey = (name: string) => name.trim().toLocaleLowerCase("pt-BR");
+    const sourceStage = new Map(stages.filter((s) => s.pipeline_id === pipeline.id).map((s) => [s.id, s]));
+    const targetStages = stages.filter((s) => s.pipeline_id === target.id);
+
+    // Confere todas as etapas antes de mover qualquer lead
+    const moves: { from: string; to: string }[] = [];
+    for (const from of new Set(leads.map((l) => l.stage_id))) {
+      const stage = sourceStage.get(from);
+      const category = stage?.category ?? "open";
+      const sameType = targetStages.filter((s) => s.category === category);
+      const to = (stage && sameType.find((s) => nameKey(s.name) === nameKey(stage.name))) ?? sameType[0];
+      if (!to) {
+        return {
+          ok: false,
+          error: `“${target.name}” não tem etapa do tipo “${STAGE_CATEGORY_LABEL[category]}” para receber os leads. Crie uma ou escolha outro pipeline.`,
+        };
+      }
+      moves.push({ from, to: to.id });
+    }
+    for (const move of moves) {
+      const { error } = await ctx.supabase
+        .from("leads")
+        .update({ stage_id: move.to })
+        .eq("stage_id", move.from)
+        .eq("organization_id", ctx.org.id);
+      if (error) return { ok: false, error: errorMessage(error) };
+    }
+    movedTo = target.name;
+  }
+
+  const { error } = await ctx.supabase.from("pipelines").delete().eq("id", pipeline.id).eq("organization_id", ctx.org.id);
+  if (error) return { ok: false, error: errorMessage(error) };
+
+  refresh();
+  return {
+    ok: true,
+    message: movedTo
+      ? `Pipeline excluído. ${leads.length === 1 ? "1 lead foi" : `${leads.length} leads foram`} para “${movedTo}”.`
+      : "Pipeline excluído",
+  };
 }
 
 export async function inviteMember(formData: FormData): Promise<ActionResult> {

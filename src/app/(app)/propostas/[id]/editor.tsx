@@ -378,7 +378,7 @@ export function ProposalEditor({
       />
 
       {!editable ? (
-        <div className="flex flex-wrap items-center gap-2 border-b border-line bg-subtle px-4 py-2.5 text-[13px] text-ink-2 sm:px-6">
+        <div className="flex flex-wrap items-center gap-2 border-b border-line bg-subtle px-4 py-2.5 text-[13px] text-ink-2 sm:px-6 lg:px-page">
           <DotBadge dotClassName={meta.dot}>{meta.label}</DotBadge>
           {proposal.status === "accepted" || proposal.status === "rejected" ? (
             <span>
@@ -394,7 +394,7 @@ export function ProposalEditor({
       ) : null}
 
       {mode === "preview" ? (
-        <div className="flex-1 bg-canvas px-3 py-6 sm:px-6 sm:py-10">
+        <div className="flex-1 bg-canvas px-3 py-6 sm:px-6 lg:px-page sm:py-10">
           <ProposalDocument
             className="rounded-xl border border-line shadow-card"
             data={{
@@ -414,7 +414,7 @@ export function ProposalEditor({
           />
         </div>
       ) : (
-        <div className="grid flex-1 gap-6 px-4 py-6 sm:px-6 xl:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="grid flex-1 gap-6 px-4 py-6 sm:px-6 lg:px-page xl:grid-cols-[minmax(0,1fr)_300px]">
           <div className="flex min-w-0 flex-col gap-4">
             <Card>
               <CardHeader title="Informações" />

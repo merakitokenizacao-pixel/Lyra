@@ -101,10 +101,10 @@ async function ProposalContent({ params }: { params: Promise<{ id: string }> }) 
 function EditorSkeleton() {
   return (
     <>
-      <div className="flex h-14 items-center border-b border-line px-6">
+      <div className="flex h-14 items-center border-b border-line px-4 sm:px-6 lg:px-page">
         <Skeleton className="h-4 w-64" />
       </div>
-      <div className="grid gap-6 px-6 py-6 xl:grid-cols-[1fr_300px]">
+      <div className="grid gap-6 px-4 py-6 sm:px-6 lg:px-page xl:grid-cols-[1fr_300px]">
         <div className="flex flex-col gap-4">
           <Skeleton className="h-48 w-full rounded-xl" />
           <Skeleton className="h-64 w-full rounded-xl" />

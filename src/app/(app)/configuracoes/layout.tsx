@@ -8,7 +8,8 @@ export default function SettingsLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <PageHeader title="Configurações" icon={<Settings />} />
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 lg:flex-row lg:gap-12 lg:py-10">
+      {/* Com o menu recolhido, a caixa perde o espaço que o menu liberou (veja --page-shift) */}
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 lg:max-w-[min(var(--container-5xl),calc(100%_-_2_*_var(--page-shift)))] lg:flex-row lg:gap-12 lg:py-10">
         <aside className="lg:w-52 lg:shrink-0">
           <div className="lg:sticky lg:top-[4.5rem]">
             <Suspense fallback={<SettingsNavLinks pathname={null} />}>

@@ -55,6 +55,7 @@ export function ClientBoard({ clients }: { clients: BoardClient[] }) {
       columns={columns}
       items={sorted}
       getColumnId={(c) => c.status}
+      className="lg:px-page"
       emptyText="Nenhum cliente neste status"
       onMove={(client, to) => {
         const next = to as ClientStatus;

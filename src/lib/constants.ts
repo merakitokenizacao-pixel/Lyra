@@ -48,6 +48,17 @@ export const STAGE_CATEGORY_LABEL: Record<StageCategory, string> = {
   lost: "Perdido",
 };
 
+/** Etapas do modelo padrão de vendas. São as mesmas que toda empresa nova recebe (create_organization no banco). */
+export const DEFAULT_PIPELINE_STAGES: { name: string; color: StageColor; category: StageCategory }[] = [
+  { name: "Novo", color: "stone", category: "open" },
+  { name: "Em contato", color: "blue", category: "open" },
+  { name: "Qualificado", color: "violet", category: "open" },
+  { name: "Proposta enviada", color: "orange", category: "open" },
+  { name: "Negociação", color: "amber", category: "open" },
+  { name: "Ganho", color: "green", category: "won" },
+  { name: "Perdido", color: "red", category: "lost" },
+];
+
 export const TEMPERATURES: Record<LeadTemperature, { label: string; icon: LucideIcon; className: string }> = {
   cold: { label: "Frio", icon: Snowflake, className: "text-sky-600" },
   warm: { label: "Morno", icon: Thermometer, className: "text-amber-600" },

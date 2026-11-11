@@ -61,7 +61,7 @@ async function ProductsContent() {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[720px] text-[13px]">
+      <table className="w-full min-w-[720px] text-[13px] lg:page-table">
         <thead>
           <tr className="border-b border-line text-left text-xs text-ink-3">
             <th className="py-2.5 pr-3 pl-4 font-medium sm:pl-6">Produto ou serviço</th>
@@ -101,7 +101,7 @@ async function ProductsContent() {
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-3 px-6 py-4">
+    <div className="flex flex-col gap-3 px-4 py-4 sm:px-6 lg:px-page">
       {Array.from({ length: 5 }).map((_, i) => (
         <Skeleton key={i} className="h-11 w-full" />
       ))}

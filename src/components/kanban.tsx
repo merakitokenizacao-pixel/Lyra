@@ -28,9 +28,11 @@ type Props<T extends { id: string }> = {
   renderCard: (item: T) => ReactNode;
   onMove: (item: T, toColumnId: string) => void;
   emptyText?: string;
+  /** Classes extras da área que rola (ex.: lg:px-page para seguir a largura fixa da página) */
+  className?: string;
 };
 
-export function Kanban<T extends { id: string }>({ columns, items, getColumnId, renderCard, onMove, emptyText }: Props<T>) {
+export function Kanban<T extends { id: string }>({ columns, items, getColumnId, renderCard, onMove, emptyText, className }: Props<T>) {
   // id estável entre servidor e cliente (sem ele o dnd-kit usa um contador global e a hidratação diverge)
   const dndId = useId();
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -69,8 +71,10 @@ export function Kanban<T extends { id: string }>({ columns, items, getColumnId, 
         },
       }}
     >
+      {/* relative: os textos sr-only dos cards (position: absolute) ficam presos nesta área que rola.
+          Sem isso eles escapam do recorte e esticam a página na horizontal. */}
       <div
-        className="flex min-h-0 flex-1 gap-3 overflow-x-auto px-4 pt-4 pb-6 sm:px-6"
+        className={cn("relative flex min-h-0 flex-1 gap-3 overflow-x-auto px-4 pt-4 pb-6 sm:px-6", className)}
         onClickCapture={(e) => {
           if (justDragged.current) {
             e.preventDefault();

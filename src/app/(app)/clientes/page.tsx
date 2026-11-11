@@ -72,7 +72,7 @@ async function ClientsContent({ searchParams }: { searchParams: SearchParams }) 
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3 sm:px-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3 sm:px-6 lg:px-page">
         <ClientSearch defaultValue={q} view={view} status={status} />
         <Segmented
           active={view}
@@ -124,7 +124,7 @@ async function ClientsContent({ searchParams }: { searchParams: SearchParams }) 
             />
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[820px] text-[13px]">
+              <table className="w-full min-w-[820px] text-[13px] lg:page-table">
                 <thead>
                   <tr className="border-b border-line text-left text-xs text-ink-3">
                     <th className="py-2.5 pr-3 pl-4 font-medium sm:pl-6">Cliente</th>
@@ -174,7 +174,7 @@ async function ClientsContent({ searchParams }: { searchParams: SearchParams }) 
                   })}
                 </tbody>
               </table>
-              <p className="border-t border-line px-4 py-3 text-xs text-ink-3 sm:px-6">
+              <p className="border-t border-line px-4 py-3 text-xs text-ink-3 sm:px-6 lg:px-page">
                 {formatNumber(rows.length)} {rows.length === 1 ? "cliente" : "clientes"} · {formatMoney(mrr, "round")}/mês em
                 receita recorrente
               </p>
@@ -188,7 +188,7 @@ async function ClientsContent({ searchParams }: { searchParams: SearchParams }) 
 
 function ClientsSkeleton() {
   return (
-    <div className="flex flex-col gap-3 px-6 py-4">
+    <div className="flex flex-col gap-3 px-4 py-4 sm:px-6 lg:px-page">
       <Skeleton className="h-8 w-72" />
       {Array.from({ length: 7 }).map((_, i) => (
         <Skeleton key={i} className="h-10 w-full" />

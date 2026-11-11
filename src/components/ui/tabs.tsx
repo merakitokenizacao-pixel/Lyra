@@ -10,7 +10,7 @@ export function LinkTabs({ items, active, className }: { items: TabItem[]; activ
     // A linha de baixo é uma sombra interna (não borda): o sublinhado da aba ativa cobre a linha
     // sem sair da caixa, e a rolagem horizontal não ganha 1px de rolagem vertical junto.
     <nav
-      className={cn("no-scrollbar flex gap-5 overflow-x-auto px-4 shadow-[inset_0_-1px_0_var(--line)] sm:px-6", className)}
+      className={cn("no-scrollbar flex gap-5 overflow-x-auto px-4 shadow-[inset_0_-1px_0_var(--line)] sm:px-6 lg:px-page", className)}
       aria-label="Filtros"
     >
       {items.map((item) => {

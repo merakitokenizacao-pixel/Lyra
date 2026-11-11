@@ -27,6 +27,38 @@
   --danger: #d93f3f;
   --success: #138a5e;
   --warning: #b45309;
+
+  /* Menu lateral do desktop, aberto e recolhido (só ícones) */
+  --sidebar-width: 13.5rem;
+  --sidebar-collapsed-width: 3.75rem;
+}
+
+/* Largura fixa do conteúdo. Recolher o menu não estica os cards: o espaço
+   que o menu libera vira margem, metade de cada lado, somada ao respiro
+   normal de 24px (lg:px-page). O pipeline e o quadro dos funis continuam
+   com a largura toda. A transição é a mesma do menu (200ms, ease-out),
+   então os cards não mudam de tamanho nem durante a animação. */
+@property --page-shift {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+:root {
+  transition: --page-shift 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Só no desktop (lg), onde o menu lateral existe */
+@media (width >= 64rem) {
+  :root[data-sidebar="collapsed"] {
+    --page-shift: calc((var(--sidebar-width) - var(--sidebar-collapsed-width)) / 2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
 }
 
 @theme inline {
@@ -46,6 +78,9 @@
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-warning: var(--warning);
+
+  /* Respiro lateral das páginas no desktop, lg:px-page (veja --page-shift) */
+  --spacing-page: calc(1.5rem + var(--page-shift));
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
@@ -100,6 +135,20 @@ body {
 * {
   scrollbar-width: thin;
   scrollbar-color: #d6d3d1 transparent;
+}
+
+/* Tabelas da largura da página (lg:page-table): o espaço que o menu recolhido
+   libera vira uma coluna vazia em cada ponta. As colunas de verdade não mudam
+   de largura (respiro nas células faria a tabela redistribuir a sobra), e as
+   linhas e o hover continuam de ponta a ponta. */
+@utility page-table {
+  & tr::before,
+  & tr::after {
+    content: "";
+    display: table-cell;
+    width: var(--page-shift);
+    padding: 0;
+  }
 }
 
 /* Linhas que rolam na horizontal sem barra visível (ex.: seções das configurações no celular) */

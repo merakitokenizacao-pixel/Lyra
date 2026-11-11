@@ -8,8 +8,10 @@ import { Input, Select } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 type Values = { q: string; stage: string; temperature: string; source: string };
+type StageGroup = { pipeline: string; stages: { id: string; name: string }[] };
 
-export function LeadFilters({ values, stages }: { values: Values; stages: { id: string; name: string }[] }) {
+/** Com mais de um pipeline, as etapas aparecem agrupadas por pipeline (nomes como "Novo" se repetem). */
+export function LeadFilters({ values, stageGroups }: { values: Values; stageGroups: StageGroup[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const [pending, startTransition] = useTransition();
@@ -39,7 +41,7 @@ export function LeadFilters({ values, stages }: { values: Values; stages: { id: 
   const hasFilters = Boolean(q || current.stage || current.temperature || current.source);
 
   return (
-    <div className="flex flex-wrap items-center gap-2 border-b border-line px-4 py-3 sm:px-6">
+    <div className="flex flex-wrap items-center gap-2 border-b border-line px-4 py-3 sm:px-6 lg:px-page">
       <div className="relative w-full sm:w-72">
         <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-ink-4" />
         <Input
@@ -63,11 +65,23 @@ export function LeadFilters({ values, stages }: { values: Values; stages: { id: 
         aria-label="Filtrar por etapa"
       >
         <option value="">Todas as etapas</option>
-        {stages.map((s) => (
-          <option key={s.id} value={s.id}>
-            {s.name}
-          </option>
-        ))}
+        {stageGroups.map((group) =>
+          stageGroups.length > 1 ? (
+            <optgroup key={group.pipeline} label={group.pipeline}>
+              {group.stages.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </optgroup>
+          ) : (
+            group.stages.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))
+          ),
+        )}
       </Select>
       <Select
         value={current.temperature}

@@ -102,7 +102,7 @@ async function ProposalsContent({ searchParams }: { searchParams: SearchParams }
         />
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[820px] text-[13px]">
+          <table className="w-full min-w-[820px] text-[13px] lg:page-table">
             <thead>
               <tr className="border-b border-line text-left text-xs text-ink-3">
                 <th className="w-16 py-2.5 pr-3 pl-4 font-medium sm:pl-6">Nº</th>
@@ -154,7 +154,7 @@ async function ProposalsContent({ searchParams }: { searchParams: SearchParams }
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-3 px-6 py-4">
+    <div className="flex flex-col gap-3 px-4 py-4 sm:px-6 lg:px-page">
       <Skeleton className="h-8 w-96 max-w-full" />
       {Array.from({ length: 6 }).map((_, i) => (
         <Skeleton key={i} className="h-10 w-full" />

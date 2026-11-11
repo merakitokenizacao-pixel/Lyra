@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, type ReactElement } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -14,10 +13,8 @@ import {
   Workflow,
   type LucideIcon,
 } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { SIDEBAR_FADE } from "./sidebar";
-import { useSidebarCollapsed } from "./sidebar-state";
 
 type NavItem = {
   href: string;
@@ -50,13 +47,13 @@ function isActive(pathname: string | null, href: string) {
 
 type NavOptions = {
   onNavigate?: () => void;
-  /** Está no menu do desktop, que pode recolher para só os ícones. */
-  collapsible?: boolean;
 };
 
-function NavLink({ item, active, onNavigate, collapsible }: NavOptions & { item: NavItem; active: boolean }) {
+// No menu recolhido ficam só os ícones, sem nome flutuante ao lado. O nome continua no link,
+// só transparente, então leitores de tela seguem anunciando cada item.
+function NavLink({ item, active, onNavigate }: NavOptions & { item: NavItem; active: boolean }) {
   const Icon = item.icon;
-  const link = (
+  return (
     <Link
       href={item.href}
       onClick={onNavigate}
@@ -72,21 +69,6 @@ function NavLink({ item, active, onNavigate, collapsible }: NavOptions & { item:
       {/* Corta sem reticências: os nomes cabem no menu aberto e, ao recolher, o texto some sob a borda */}
       <span className={cn("overflow-hidden whitespace-nowrap", SIDEBAR_FADE)}>{item.label}</span>
     </Link>
-  );
-  return collapsible ? <CollapsedLabel label={item.label}>{link}</CollapsedLabel> : link;
-}
-
-/** No menu recolhido, o nome do item aparece ao lado do ícone ao passar o mouse ou focar. */
-function CollapsedLabel({ label, children }: { label: string; children: ReactElement }) {
-  const collapsed = useSidebarCollapsed();
-  const [open, setOpen] = useState(false);
-  return (
-    <Tooltip open={collapsed && open} onOpenChange={setOpen}>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent side="right" sideOffset={14}>
-        {label}
-      </TooltipContent>
-    </Tooltip>
   );
 }
 

@@ -15,10 +15,13 @@ export function StagesEditor({
   pipelineId,
   stages: initial,
   canEdit,
+  onSaved,
 }: {
   pipelineId: string;
   stages: (StageInput & { id: string; leads: number })[];
   canEdit: boolean;
+  /** Depois de salvar (ex.: fechar o diálogo de etapas do quadro) */
+  onSaved?: () => void;
 }) {
   const [stages, setStages] = useState<StageRow[]>(initial.map((s) => ({ ...s, key: s.id })));
   const { pending, run } = useAction();
@@ -131,7 +134,9 @@ export function StagesEditor({
               size="sm"
               variant="primary"
               disabled={!dirty || pending}
-              onClick={() => run(() => saveStages(pipelineId, stages.map(({ key, leads, ...s }) => s)))}
+              onClick={() =>
+                run(() => saveStages(pipelineId, stages.map(({ key, leads, ...s }) => s)), { onSuccess: () => onSaved?.() })
+              }
             >
               {pending ? "Salvando…" : "Salvar etapas"}
             </Button>

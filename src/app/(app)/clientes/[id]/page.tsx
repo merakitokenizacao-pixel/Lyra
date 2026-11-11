@@ -99,7 +99,7 @@ async function ClientDetail({ params }: { params: Promise<{ id: string }> }) {
         }
       />
 
-      <section className="border-b border-line px-4 py-6 sm:px-6">
+      <section className="border-b border-line px-4 py-6 sm:px-6 lg:px-page">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
           <div className="flex min-w-0 items-start gap-3.5">
             <Avatar name={client.name} size="lg" />
@@ -143,7 +143,7 @@ async function ClientDetail({ params }: { params: Promise<{ id: string }> }) {
         </div>
       </section>
 
-      <div className="grid flex-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid flex-1 gap-6 px-4 py-6 sm:px-6 lg:px-page lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="flex min-w-0 flex-col gap-5">
           <ActivityComposer clientId={client.id} />
           <div>
@@ -270,17 +270,17 @@ async function ClientDetail({ params }: { params: Promise<{ id: string }> }) {
 function DetailSkeleton() {
   return (
     <>
-      <div className="flex h-14 items-center border-b border-line px-6">
+      <div className="flex h-14 items-center border-b border-line px-4 sm:px-6 lg:px-page">
         <Skeleton className="h-4 w-48" />
       </div>
-      <div className="flex items-center gap-3 border-b border-line px-6 py-6">
+      <div className="flex items-center gap-3 border-b border-line px-4 py-6 sm:px-6 lg:px-page">
         <Skeleton className="size-11 rounded-full" />
         <div className="flex flex-col gap-2">
           <Skeleton className="h-5 w-56" />
           <Skeleton className="h-3 w-40" />
         </div>
       </div>
-      <div className="grid gap-6 px-6 py-6 lg:grid-cols-[1fr_340px]">
+      <div className="grid gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[1fr_340px] lg:px-page">
         <Skeleton className="h-64 w-full" />
         <Skeleton className="h-64 w-full" />
       </div>

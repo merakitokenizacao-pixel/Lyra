@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Link from "next/link";
 import { getContext, isAdmin } from "@/lib/auth";
 import { getPipelines } from "@/lib/queries";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, Skeleton } from "@/components/ui/misc";
 import { SettingsTitle } from "../settings-ui";
 import { StagesEditor } from "./stages-editor";
@@ -13,7 +15,16 @@ export default function PipelineSettingsPage() {
     <div className="flex flex-col gap-6">
       <SettingsTitle
         title="Etapas do pipeline"
-        description="O caminho de cada lead até virar cliente. Etapas do tipo “Ganho” e “Perdido” encerram a oportunidade."
+        description={
+          <>
+            O caminho de cada lead até virar cliente. Etapas do tipo “Ganho” e “Perdido” encerram a oportunidade. Para criar,
+            renomear ou excluir pipelines, use a lista{" "}
+            <Link href="/pipeline" className="font-medium text-ink-2 underline-offset-4 hover:text-accent hover:underline">
+              Pipelines
+            </Link>{" "}
+            ao lado do quadro.
+          </>
+        }
       />
       <Suspense fallback={<Skeleton className="h-96 w-full rounded-xl" />}>
         <PipelineSettings />
@@ -37,7 +48,12 @@ async function PipelineSettings() {
       {pipelines.map((pipeline) => (
         <Card key={pipeline.id}>
           <CardHeader
-            title={pipeline.name}
+            title={
+              <span className="flex items-center gap-2">
+                {pipeline.name}
+                {pipeline.is_default ? <Badge tone="muted">Padrão</Badge> : null}
+              </span>
+            }
             description={
               admin
                 ? "Renomeie, escolha a cor e o tipo de cada etapa e ajuste a ordem com as setas."

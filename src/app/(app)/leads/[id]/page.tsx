@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Building2, CalendarDays, FileText, Mail, Phone, Target } from "lucide-react";
+import { Building2, CalendarDays, FileText, Mail, Phone, SquareKanban, Target } from "lucide-react";
 import { getContext } from "@/lib/auth";
 import { getMembers, getOwnerOptions, getPipelines } from "@/lib/queries";
 import { PROPOSAL_STATUSES, sourceLabel, type ActivityType } from "@/lib/constants";
@@ -14,6 +14,7 @@ import { StageBadge, TemperatureLabel } from "@/components/lead-bits";
 import { ActivityComposer } from "@/components/activity/composer";
 import { Timeline } from "@/components/activity/timeline";
 import { StageStepper } from "./stage-stepper";
+import { MovePipeline } from "./move-pipeline";
 import { Qualification } from "./qualification";
 import { LeadHeaderActions } from "./header-actions";
 
@@ -88,7 +89,7 @@ async function LeadDetail({ params }: { params: Promise<{ id: string }> }) {
       />
 
       {/* Cabeçalho do lead */}
-      <section className="border-b border-line px-4 py-6 sm:px-6">
+      <section className="border-b border-line px-4 py-6 sm:px-6 lg:px-page">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
           <div className="flex min-w-0 items-start gap-3.5">
             <Avatar name={lead.name} size="lg" />
@@ -139,6 +140,28 @@ async function LeadDetail({ params }: { params: Promise<{ id: string }> }) {
         </div>
         {stages.length > 0 ? (
           <div className="mt-6">
+            {/* Com mais de um pipeline: de qual quadro o lead é, e como levá-lo para outro */}
+            {pipeline && pipelines.length > 1 ? (
+              <div className="mb-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-ink-3">
+                <SquareKanban aria-hidden className="size-3.5 text-ink-4" />
+                Pipeline
+                <Link href={`/pipeline?pipeline=${pipeline.id}`} className="font-medium text-ink-2 hover:text-accent">
+                  {pipeline.name}
+                </Link>
+                <span aria-hidden className="text-ink-4">
+                  ·
+                </span>
+                <MovePipeline
+                  leadId={lead.id}
+                  currentId={pipeline.id}
+                  pipelines={pipelines.map((p) => ({
+                    id: p.id,
+                    name: p.name,
+                    stages: p.stages.map((s) => ({ id: s.id, name: s.name, category: s.category })),
+                  }))}
+                />
+              </div>
+            ) : null}
             <StageStepper
               leadId={lead.id}
               stageId={lead.stage_id}
@@ -153,7 +176,7 @@ async function LeadDetail({ params }: { params: Promise<{ id: string }> }) {
         ) : null}
       </section>
 
-      <div className="grid flex-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid flex-1 gap-6 px-4 py-6 sm:px-6 lg:px-page lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="flex min-w-0 flex-col gap-5">
           <ActivityComposer leadId={lead.id} />
           <div>
@@ -270,10 +293,10 @@ async function LeadDetail({ params }: { params: Promise<{ id: string }> }) {
 function DetailSkeleton() {
   return (
     <>
-      <div className="flex h-14 items-center border-b border-line px-6">
+      <div className="flex h-14 items-center border-b border-line px-4 sm:px-6 lg:px-page">
         <Skeleton className="h-4 w-48" />
       </div>
-      <div className="flex flex-col gap-4 border-b border-line px-6 py-6">
+      <div className="flex flex-col gap-4 border-b border-line px-4 py-6 sm:px-6 lg:px-page">
         <div className="flex items-center gap-3">
           <Skeleton className="size-11 rounded-full" />
           <div className="flex flex-col gap-2">
@@ -283,7 +306,7 @@ function DetailSkeleton() {
         </div>
         <Skeleton className="h-8 w-full" />
       </div>
-      <div className="grid gap-6 px-6 py-6 lg:grid-cols-[1fr_340px]">
+      <div className="grid gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[1fr_340px] lg:px-page">
         <Skeleton className="h-64 w-full" />
         <Skeleton className="h-64 w-full" />
       </div>
