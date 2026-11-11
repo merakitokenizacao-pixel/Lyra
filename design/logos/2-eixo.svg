@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="96" height="96" role="img" aria-label="Lyra — opção 2: Eixo">
+  <!-- "L" geométrico como eixo de gráfico; Vega como o ponto de dado subindo -->
+  <path d="M11.25 11.25V36.75H36.75" fill="none" stroke="#1c1917" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="31" cy="17" r="5" fill="#0b63e8"/>
+</svg>

@@ -1,0 +1,32 @@
+import "server-only";
+
+import { createServerClient } from "@supabase/ssr";
+import { io } from "next/cache";
+import { cookies } from "next/headers";
+import type { Database } from "./database.types";
+
+export async function createClient() {
+  // Ao ser criado, o cliente recupera a sessão e compara a expiração do token com o relógio
+  // (Date.now()). `io()` deixa isso fora do prerender: roda só na requisição real.
+  await io();
+  const cookieStore = await cookies();
+
+  return createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+          } catch {
+            // Chamado a partir de um Server Component: o proxy já renova a sessão.
+          }
+        },
+      },
+    },
+  );
+}

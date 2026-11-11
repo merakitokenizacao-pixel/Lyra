@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Favicon da Lyra: a marca em matriz 5×5 (design/logos/1-matriz.svg) em branco sobre o quadrado escuro, com Vega em azul -->
+  <rect width="64" height="64" rx="15" fill="#1c1917"/>
+  <g transform="translate(10 10) scale(0.88)">
+    <g fill="#ffffff" fill-opacity="0.2">
+      <circle cx="15" cy="5" r="1.6"/><circle cx="25" cy="5" r="1.6"/><circle cx="35" cy="5" r="1.6"/>
+      <circle cx="15" cy="15" r="1.6"/><circle cx="25" cy="15" r="1.6"/><circle cx="35" cy="15" r="1.6"/><circle cx="45" cy="15" r="1.6"/>
+      <circle cx="15" cy="25" r="1.6"/><circle cx="25" cy="25" r="1.6"/><circle cx="35" cy="25" r="1.6"/><circle cx="45" cy="25" r="1.6"/>
+      <circle cx="15" cy="35" r="1.6"/><circle cx="25" cy="35" r="1.6"/><circle cx="35" cy="35" r="1.6"/><circle cx="45" cy="35" r="1.6"/>
+    </g>
+    <g fill="#ffffff">
+      <circle cx="5" cy="5" r="3.8"/><circle cx="5" cy="15" r="3.8"/><circle cx="5" cy="25" r="3.8"/><circle cx="5" cy="35" r="3.8"/>
+      <circle cx="5" cy="45" r="3.8"/><circle cx="15" cy="45" r="3.8"/><circle cx="25" cy="45" r="3.8"/><circle cx="35" cy="45" r="3.8"/><circle cx="45" cy="45" r="3.8"/>
+    </g>
+    <circle cx="45" cy="5" r="3.8" fill="#4a8cf7"/>
+  </g>
+</svg>

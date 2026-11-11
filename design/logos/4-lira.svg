@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="96" height="96" role="img" aria-label="Lyra — opção 4: Lira">
+  <!-- A lira (instrumento que dá nome à constelação), em traço único; Vega no topo, como no céu -->
+  <g fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 40C11 38.5 9 30 11.5 22C13.5 15.5 13 11.5 9 9"/>
+    <path d="M29 40C37 38.5 39 30 36.5 22C34.5 15.5 35 11.5 39 9"/>
+    <path d="M18 40H30"/>
+    <path d="M12.6 17H35.4"/>
+    <path d="M20 17V40M24 17V40M28 17V40"/>
+  </g>
+  <circle cx="24" cy="8.5" r="3.2" fill="#0b63e8"/>
+</svg>

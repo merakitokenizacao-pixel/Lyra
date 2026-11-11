@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+/* -------------------------------------------------------------
+   Lyra · tokens de design
+   Paleta "stone" quente, superfícies brancas flutuando sobre o
+   canvas e azul como único acento — inspirado no visual da ROX.
+   ------------------------------------------------------------- */
+:root {
+  --canvas: #f5f5f4;
+  --panel: #ffffff;
+  --subtle: #fafaf9;
+  --hover: #f5f5f4;
+  --line: #e7e5e4;
+  --line-strong: #d6d3d1;
+  --ink: #1c1917;
+  --ink-2: #44403b;
+  --ink-3: #79716b;
+  --ink-4: #a6a09b;
+  --accent: #0b63e8;
+  --accent-hover: #0a56c9;
+  --accent-soft: #eaf2fe;
+  --danger: #d93f3f;
+  --success: #138a5e;
+  --warning: #b45309;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-panel: var(--panel);
+  --color-subtle: var(--subtle);
+  --color-hover: var(--hover);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
+
+  --shadow-xs: 0 1px 1px 0 rgb(28 25 23 / 0.04);
+  --shadow-card: 0 1px 2px 0 rgb(28 25 23 / 0.04), 0 1px 3px 0 rgb(28 25 23 / 0.03);
+  --shadow-pop: 0 12px 32px -8px rgb(28 25 23 / 0.16), 0 2px 6px -2px rgb(28 25 23 / 0.08);
+  --shadow-lift: 0 18px 40px -12px rgb(28 25 23 / 0.22), 0 4px 10px -4px rgb(28 25 23 / 0.1);
+
+  --animate-fade-in: fade-in 160ms ease-out;
+  --animate-pop-in: pop-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(4px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+html {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgb(11 99 232 / 0.16);
+}
+
+/* Títulos editoriais em serifada, com tracking negativo como na ROX */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
+  font-weight: 400;
+}
+
+/* Scrollbars discretas */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d6d3d1 transparent;
+}
+
+/* Linhas que rolam na horizontal sem barra visível (ex.: seções das configurações no celular) */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Grade fina usada nas telas de entrada (linhas de layout da ROX) */
+.grid-frame {
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+  body {
+    background: #ffffff;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-plain {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
