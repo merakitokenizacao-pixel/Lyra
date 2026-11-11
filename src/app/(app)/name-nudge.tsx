@@ -12,7 +12,7 @@ export function NameNudge() {
 
   return (
     <form
-      onSubmit={submit(updateProfile, { success: "Prazer! Agora o Lyra sabe como te chamar." })}
+      onSubmit={submit(updateProfile, { success: "Prazer! Agora o Lyro sabe como te chamar." })}
       className="flex w-full max-w-md flex-col gap-2"
     >
       <div className="flex gap-2">

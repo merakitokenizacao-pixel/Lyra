@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { MemberRole } from "@/lib/constants";
 
-export const ORG_COOKIE = "lyra_org";
+export const ORG_COOKIE = "lyro_org";
 export const ORG_COOKIE_OPTIONS = { path: "/", sameSite: "lax", httpOnly: true, maxAge: 60 * 60 * 24 * 365 } as const;
 
 /** Um cliente Supabase por requisição. */

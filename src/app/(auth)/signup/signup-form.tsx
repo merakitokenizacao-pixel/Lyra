@@ -36,7 +36,7 @@ export function SignupForm({ invitedEmail }: { invitedEmail?: string }) {
         <div className="flex items-start gap-2.5 rounded-lg bg-accent-soft/70 px-3 py-2.5">
           <UsersRound className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
           <p className="text-[13px] leading-relaxed text-ink-2">
-            Você foi convidado para um time no Lyra. Crie sua conta com o e-mail do convite e você entra direto, sem configurar
+            Você foi convidado para um time no Lyro. Crie sua conta com o e-mail do convite e você entra direto, sem configurar
             nada.
           </p>
         </div>

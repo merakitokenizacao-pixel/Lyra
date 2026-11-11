@@ -1,28 +1,49 @@
 import { Suspense, type ReactNode } from "react";
 import Link from "next/link";
-import { LyraLogo } from "@/components/brand";
+import { LyroLogo } from "@/components/brand";
 import { ActiveNav, NavLinks } from "@/components/shell/nav";
 import { MobileNav } from "@/components/shell/mobile-nav";
+import { SIDEBAR_FADE } from "@/components/shell/sidebar";
+import { SidebarToggle } from "@/components/shell/sidebar-toggle";
 import { UserMenu, UserMenuFallback } from "@/components/shell/user-menu";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="lg:flex lg:h-dvh lg:overflow-hidden">
-      {/* Barra lateral sobre o canvas (desktop) */}
-      <aside className="hidden w-60 shrink-0 flex-col px-3 pt-4 pb-3 lg:flex">
-        <Link href="/" className="mb-7 rounded-lg px-2 py-1 outline-none focus-visible:ring-2 focus-visible:ring-accent/40">
-          <LyraLogo />
-        </Link>
-        <nav className="flex-1 overflow-y-auto" aria-label="Principal">
-          <Suspense fallback={<NavLinks pathname={null} />}>
-            <ActiveNav />
-          </Suspense>
-        </nav>
-        <div className="border-t border-line pt-2">
-          <Suspense fallback={<UserMenuFallback />}>
-            <UserMenu />
-          </Suspense>
-        </div>
+      {/* Barra lateral sobre o canvas (desktop). Recolhe para só os ícones: veja shell/sidebar.ts */}
+      <aside
+        data-sidebar-root
+        className="hidden w-60 shrink-0 flex-col px-3 pt-5 pb-3 transition-[width] duration-200 ease-out collapsed:w-15 motion-reduce:transition-none lg:flex"
+      >
+        <TooltipProvider delayDuration={100} disableHoverableContent>
+          {/* Nome e seta na mesma linha do cabeçalho das páginas; recolhido, fica só a seta */}
+          <div className="mb-3 flex h-8 items-center justify-between">
+            {/* O respiro fica no nome, não no link: assim o link encolhe até zero e não empurra a seta */}
+            <Link
+              href="/"
+              className={cn(
+                "min-w-0 overflow-hidden rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-accent/40",
+                SIDEBAR_FADE,
+                "collapsed:invisible",
+              )}
+            >
+              <LyroLogo className="px-2.5 py-1" />
+            </Link>
+            <SidebarToggle />
+          </div>
+          <nav className="flex-1 overflow-y-auto" aria-label="Principal">
+            <Suspense fallback={<NavLinks pathname={null} collapsible />}>
+              <ActiveNav collapsible />
+            </Suspense>
+          </nav>
+          <div className="border-t border-line pt-2">
+            <Suspense fallback={<UserMenuFallback />}>
+              <UserMenu collapsible />
+            </Suspense>
+          </div>
+        </TooltipProvider>
       </aside>
 
       {/* Barra superior (mobile) */}
@@ -35,7 +56,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           }
         />
         <Link href="/">
-          <LyraLogo />
+          <LyroLogo />
         </Link>
         <span className="size-8" aria-hidden />
       </header>

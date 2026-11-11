@@ -60,7 +60,7 @@ export function StageBars({ rows }: { rows: StageRow[] }) {
             <span className="flex h-5 items-center border-l border-line-strong">
               {row.count > 0 ? (
                 <span
-                  className="block h-5 rounded-r-[4px] bg-accent"
+                  className="block h-3 rounded-r-[4px] bg-accent"
                   style={{ width: `${Math.max(1.5, (row.count / max) * 100)}%` }}
                 />
               ) : null}

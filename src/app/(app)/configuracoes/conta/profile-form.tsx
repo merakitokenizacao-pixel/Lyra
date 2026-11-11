@@ -46,7 +46,7 @@ export function ProfileForm({
           <div className="flex items-start gap-3 bg-accent-soft/60 px-4 py-3 sm:px-5">
             <Smile className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
             <p className="text-[13px] leading-relaxed text-ink-2">
-              Hoje o Lyra te chama de <span className="font-medium text-ink">{emailName}</span>, o começo do seu e-mail. Conte seu nome
+              Hoje o Lyro te chama de <span className="font-medium text-ink">{emailName}</span>, o começo do seu e-mail. Conte seu nome
               para o time saber quem é você e para a tela inicial te cumprimentar direito.
             </p>
           </div>

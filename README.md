@@ -1,4 +1,4 @@
-# Lyra
+# Lyro
 
 CRM para gestão comercial: leads, pipeline de qualificação, clientes, propostas personalizadas e acompanhamento do estado de cada cliente. Multiempresa (cada organização vê só os próprios dados) e em português.
 
@@ -72,7 +72,7 @@ npx supabase gen types typescript --project-id <project-ref> > src/lib/supabase/
 
 - Toda tabela tem `organization_id` e políticas RLS que só liberam linhas das organizações de que o usuário é membro. Papéis: `owner`, `admin`, `member` (configurações e equipe exigem admin).
 - O link público da proposta (`/p/<token>`) usa três RPCs `SECURITY DEFINER` liberadas ao `anon` de propósito: `get_public_proposal`, `mark_proposal_viewed` e `respond_proposal`. Elas só funcionam com o token (UUID aleatório), nunca expõem rascunhos e validam status e validade.
-- Convites: o Lyra não envia e-mail; o convite é um link. Quem é convidado entra na organização automaticamente ao entrar ou criar a conta com o e-mail do convite.
+- Convites: o Lyro não envia e-mail; o convite é um link. Quem é convidado entra na organização automaticamente ao entrar ou criar a conta com o e-mail do convite.
 - Senha: trocar em *Minha conta* exige a senha atual. Sem ela, só pelo link de recuperação, e por até 30 minutos depois de aberto.
 
 ## Estrutura

@@ -1,4 +1,4 @@
-// Gerado a partir do schema do Supabase (projeto Lyra).
+// Gerado a partir do schema do Supabase.
 // Para regenerar: Supabase MCP `generate_typescript_types` ou
 // `npx supabase gen types typescript --project-id dfzaadgemrmldjowbetg`.
 
@@ -263,6 +263,70 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      funnels: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          organization_id: string
+          product_id: string | null
+          status: Database["public"]["Enums"]["funnel_status"]
+          updated_at: string
+          variants: Json
+          winner_variant: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          product_id?: string | null
+          status?: Database["public"]["Enums"]["funnel_status"]
+          updated_at?: string
+          variants?: Json
+          winner_variant?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          product_id?: string | null
+          status?: Database["public"]["Enums"]["funnel_status"]
+          updated_at?: string
+          variants?: Json
+          winner_variant?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "funnels_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "funnels_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "funnels_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
@@ -899,6 +963,7 @@ export type Database = {
         | "system"
       billing_cycle: "one_time" | "monthly"
       client_status: "onboarding" | "active" | "at_risk" | "paused" | "churned"
+      funnel_status: "draft" | "testing" | "active" | "paused" | "archived"
       lead_temperature: "cold" | "warm" | "hot"
       member_role: "owner" | "admin" | "member"
       proposal_status:

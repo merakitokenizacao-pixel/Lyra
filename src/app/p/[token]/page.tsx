@@ -4,7 +4,7 @@ import { CircleCheck, CircleX, Clock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import type { BillingCycle, ProposalStatus } from "@/lib/constants";
 import { formatDateTime, isPastDate } from "@/lib/format";
-import { LyraMark } from "@/components/brand";
+import { LyroMark } from "@/components/brand";
 import { Skeleton } from "@/components/ui/misc";
 import { ProposalDocument } from "@/components/proposal-document";
 import { MarkViewed, PrintButton, RespondForm } from "./client-parts";
@@ -79,7 +79,7 @@ async function PublicProposal({
   if (!proposal) {
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-3 px-6 text-center">
-        <LyraMark className="size-9" />
+        <LyroMark className="size-9" />
         <h1 className="font-display text-[30px] text-ink">Proposta indisponível</h1>
         <p className="max-w-sm text-[13.5px] text-ink-3">
           O link pode ter sido digitado incorretamente ou a proposta foi retirada. Fale com quem enviou para receber um novo link.
@@ -182,7 +182,7 @@ async function PublicProposal({
         </section>
 
         <p className="no-print mt-8 flex items-center justify-center gap-1.5 text-xs text-ink-4">
-          <LyraMark className="size-4" /> Enviado com Lyra
+          <LyroMark className="size-4" /> Enviado com Lyro
         </p>
       </main>
     </>

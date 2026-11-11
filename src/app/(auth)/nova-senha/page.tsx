@@ -13,7 +13,7 @@ export default function NewPasswordPage() {
   return (
     <Suspense
       fallback={
-        <AuthCard title="Crie sua senha nova." muted="E volte direto para o Lyra.">
+        <AuthCard title="Crie sua senha nova." muted="E volte direto para o Lyro.">
           <FormSkeleton />
         </AuthCard>
       }
@@ -43,7 +43,7 @@ async function NewPasswordGate() {
   }
 
   return (
-    <AuthCard title="Crie sua senha nova." muted="E volte direto para o Lyra.">
+    <AuthCard title="Crie sua senha nova." muted="E volte direto para o Lyro.">
       <NewPasswordForm email={email} />
     </AuthCard>
   );

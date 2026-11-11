@@ -18,7 +18,7 @@ export default function CompanyPage() {
     <div className="flex flex-col gap-6">
       <SettingsTitle
         title="Empresa e time"
-        description="Como sua empresa aparece no Lyra e quem trabalha com você aqui dentro."
+        description="Como sua empresa aparece no Lyro e quem trabalha com você aqui dentro."
       />
       <Suspense fallback={<CompanySkeleton />}>
         <CompanyContent />
@@ -69,7 +69,7 @@ async function CompanyContent() {
           </span>
           <div className="min-w-0 flex-1">
             <p className="truncate font-display text-[26px] leading-tight text-ink">{ctx.org.name}</p>
-            <p className="mt-1 text-[13px] text-ink-3">No Lyra desde {formatDate(org?.created_at, "long")}</p>
+            <p className="mt-1 text-[13px] text-ink-3">No Lyro desde {formatDate(org?.created_at, "long")}</p>
           </div>
           <Badge tone={ctx.role === "owner" ? "dark" : "muted"} className="self-start sm:self-center">
             Seu papel: {ROLE_LABEL[ctx.role]}

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Favicon da Lyra: a marca em matriz 5×5 (design/logos/1-matriz.svg) em branco sobre o quadrado escuro, com Vega em azul -->
+  <!-- Favicon do Lyro: o ícone em matriz 5×5 (design/logos/1-matriz.svg) em branco sobre o quadrado escuro, com o ponto azul no canto -->
   <rect width="64" height="64" rx="15" fill="#1c1917"/>
   <g transform="translate(10 10) scale(0.88)">
     <g fill="#ffffff" fill-opacity="0.2">

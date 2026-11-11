@@ -137,7 +137,7 @@ export function greeting() {
 }
 
 /**
- * Como o Lyra chama a pessoa: o nome preferido ou o primeiro nome.
+ * Como o Lyro chama a pessoa: o nome preferido ou o primeiro nome.
  * Null enquanto ela não informou um nome de verdade (só o começo do e-mail).
  */
 export function callName(profile: { full_name: string; preferred_name: string | null; name_missing: boolean }) {

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { Toaster } from "sonner";
+import { sidebarInitScript } from "@/components/shell/sidebar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,10 +23,10 @@ const newsreader = Newsreader({
 
 export const metadata: Metadata = {
   title: {
-    default: "Lyra",
-    template: "%s · Lyra",
+    default: "Lyro",
+    template: "%s · Lyro",
   },
-  description: "Lyra — CRM para leads, pipeline, clientes e propostas.",
+  description: "Lyro — CRM para leads, pipeline, clientes e propostas.",
 };
 
 export const viewport: Viewport = {
@@ -37,7 +38,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
+      // O script abaixo pode marcar o <html> antes de o React hidratar
+      suppressHydrationWarning
     >
+      <head>
+        {/* Menu lateral recolhido salvo: aplica antes da primeira pintura (sem piscar) */}
+        <script dangerouslySetInnerHTML={{ __html: sidebarInitScript }} />
+      </head>
       <body className="min-h-full">
         {children}
         <Toaster

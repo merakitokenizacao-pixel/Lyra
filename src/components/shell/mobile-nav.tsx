@@ -3,7 +3,7 @@
 import { Suspense, useState, type ReactNode } from "react";
 import { Dialog as D } from "radix-ui";
 import { Menu, X } from "lucide-react";
-import { LyraLogo } from "@/components/brand";
+import { LyroLogo } from "@/components/brand";
 import { ActiveNav, NavLinks } from "./nav";
 
 export function MobileNav({ userMenu }: { userMenu: ReactNode }) {
@@ -20,7 +20,7 @@ export function MobileNav({ userMenu }: { userMenu: ReactNode }) {
           <div className="flex items-center justify-between px-1.5 pt-1 pb-5">
             <D.Title asChild>
               <span>
-                <LyraLogo />
+                <LyroLogo />
               </span>
             </D.Title>
             <D.Description className="sr-only">Navegação principal</D.Description>

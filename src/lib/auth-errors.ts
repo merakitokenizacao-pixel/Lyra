@@ -22,7 +22,7 @@ export function authErrorMessage(error: AuthErrorLike): string {
     case "user_already_exists":
       return "Já existe uma conta com este e-mail. Faça login.";
     case "email_exists":
-      return "Este e-mail já é usado por outra conta do Lyra.";
+      return "Este e-mail já é usado por outra conta do Lyro.";
     case "same_password":
       return "Essa já é a sua senha atual. Escolha uma diferente.";
     case "weak_password":

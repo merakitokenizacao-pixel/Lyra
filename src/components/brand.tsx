@@ -1,14 +1,14 @@
 import { cn } from "@/lib/utils";
 
 /*
- * Marca da Lyra: um "L" em matriz de pontos 5×5, na mesma grade dos ícones do app (DotGlyph),
- * com Vega — a estrela mais brilhante da constelação de Lira — em azul no canto.
- * Os pontos seguem a cor do texto (currentColor); os apagados são essa cor com pouca opacidade.
- * Arte de referência: design/logos/1-matriz.svg. Favicon: src/app/icon.svg.
+ * Ícone do Lyro: um "L" em matriz de pontos 5×5, na mesma grade dos ícones do app (DotGlyph),
+ * com um ponto azul no canto. Os pontos seguem a cor do texto (currentColor); os apagados são
+ * essa cor com pouca opacidade. Fica no favicon (src/app/icon.svg) e na proposta pública; no app
+ * e nas telas de entrada a marca é só o nome (LyroLogo). Arte de referência: design/logos/1-matriz.svg.
  */
 const MARK = ["#...*", "#....", "#....", "#....", "#####"];
 
-export function LyraMark({ className }: { className?: string }) {
+export function LyroMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 50 50" className={cn("size-6", className)} aria-hidden>
       {MARK.flatMap((row, y) =>
@@ -27,13 +27,9 @@ export function LyraMark({ className }: { className?: string }) {
   );
 }
 
-export function LyraLogo({ className, size = "md" }: { className?: string; size?: "md" | "lg" }) {
-  return (
-    <span className={cn("inline-flex items-center gap-2 text-ink", className)}>
-      <LyraMark className={size === "lg" ? "size-8" : "size-6"} />
-      <span className={cn("font-display leading-none", size === "lg" ? "text-[28px]" : "text-[22px]")}>Lyra</span>
-    </span>
-  );
+/** A marca nas telas: só o nome, na serifada dos títulos. */
+export function LyroLogo({ className }: { className?: string }) {
+  return <span className={cn("inline-flex font-display text-[22px] leading-none text-ink", className)}>Lyro</span>;
 }
 
 /* Ícones em matriz de pontos (linguagem visual da ROX), desenhados por nós. */
@@ -46,6 +42,7 @@ const GLYPHS = {
   products: ["##.##", "##.##", ".....", "##.##", "##.##"],
   tasks: ["....#", "...##", "#.##.", "###..", ".#..."],
   chart: [".....", "...#.", ".#.#.", ".#.##", "#####"],
+  funnels: ["#####", ".###.", "..#..", "..#..", "..#.."],
 } as const;
 
 export type GlyphName = keyof typeof GLYPHS;

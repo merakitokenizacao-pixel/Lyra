@@ -38,7 +38,7 @@ export function OnboardingForm() {
         <span>
           <span className="block text-[13px] font-medium text-ink">Começar com dados de exemplo</span>
           <span className="block text-xs text-ink-3">
-            12 leads, 6 clientes, 3 propostas e um catálogo fictícios para explorar o Lyra. Você pode excluí-los depois.
+            12 leads, 6 clientes, 3 propostas e um catálogo fictícios para explorar o Lyro. Você pode excluí-los depois.
           </span>
         </span>
       </label>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, CheckSquare, FileText, House, Sparkles } from "lucide-react";
+import { ArrowDownRight, ArrowRight, ArrowUpRight, CheckSquare, FileText, House, Sparkles } from "lucide-react";
 import { getContext } from "@/lib/auth";
 import { getPipelines } from "@/lib/queries";
 import {
@@ -118,30 +118,38 @@ async function Dashboard() {
   const accepted30 = allProposals.filter((p) => p.status === "accepted" && (p.responded_at ?? p.updated_at) >= since30);
   const drafts = allProposals.filter((p) => p.status === "draft").length;
 
-  const kpis = [
+  // Cada indicador: nome, número e um detalhe curto. O texto completo fica no title.
+  const kpis: { label: string; value: string; suffix?: string; meta: string; hint: string; tone?: "up" | "down" }[] = [
     {
       label: "Pipeline em aberto",
       value: formatMoney(openValue, "compact"),
-      caption: `${formatNumber(openLeads.length)} ${openLeads.length === 1 ? "lead em aberto" : "leads em aberto"}`,
+      meta: `${formatNumber(openLeads.length)} ${openLeads.length === 1 ? "lead" : "leads"}`,
+      hint: `${formatNumber(openLeads.length)} ${openLeads.length === 1 ? "lead em aberto" : "leads em aberto"}, somando o valor estimado`,
     },
     {
-      label: "Novos leads em 30 dias",
+      label: "Novos leads · 30 dias",
       value: formatNumber(new30),
-      caption:
-        delta === 0 ? "Igual aos 30 dias anteriores" : `${delta > 0 ? "+" : "−"}${Math.abs(delta)} vs. 30 dias anteriores`,
+      meta: delta === 0 ? "estável" : `${delta > 0 ? "+" : "−"}${Math.abs(delta)}`,
+      hint:
+        delta === 0
+          ? "Igual aos 30 dias anteriores"
+          : `${delta > 0 ? "+" : "−"}${Math.abs(delta)} em relação aos 30 dias anteriores (${formatNumber(prev30)})`,
       tone: delta > 0 ? "up" : delta < 0 ? "down" : undefined,
     },
     {
       label: "Taxa de conversão",
       value: won + lost > 0 ? formatPercent(conversion) : "—",
-      caption: won + lost > 0 ? `${won} ganhos de ${won + lost} decididos` : "Nenhum lead decidido ainda",
+      meta: won + lost > 0 ? `${won} de ${won + lost}` : "sem dados",
+      hint: won + lost > 0 ? `${won} ganhos de ${won + lost} leads decididos` : "Nenhum lead ganho ou perdido ainda",
     },
     {
       label: "Receita recorrente",
-      value: `${formatMoney(mrr, "compact")}`,
-      caption: `${formatNumber(recurring.length)} ${recurring.length === 1 ? "cliente ativo" : "clientes ativos"} · por mês`,
+      value: formatMoney(mrr, "compact"),
+      suffix: "/mês",
+      meta: `${formatNumber(recurring.length)} ${recurring.length === 1 ? "cliente" : "clientes"}`,
+      hint: `${formatNumber(recurring.length)} ${recurring.length === 1 ? "cliente ativo" : "clientes ativos"}, somando as mensalidades`,
     },
-  ] as const;
+  ];
 
   const today = formatDate(new Date(), "long");
   // Nome preferido ou primeiro nome; null enquanto o nome for só o começo do e-mail
@@ -164,31 +172,42 @@ async function Dashboard() {
         </Chip>
       </section>
 
-      {/* Indicadores em faixa emoldurada */}
+      {/* Indicadores em faixa compacta */}
       <Card className="grid grid-cols-2 overflow-hidden xl:grid-cols-4">
-        {kpis.map((kpi, index) => (
-          <div
-            key={kpi.label}
-            className={cn(
-              "flex flex-col gap-1 border-line px-4 py-4 sm:px-5",
-              index % 2 === 0 && "border-r",
-              index < 2 && "border-b xl:border-b-0",
-              index === 1 && "xl:border-r",
-              index === 2 && "xl:border-r",
-            )}
-          >
-            <span className="text-[12.5px] text-ink-3">{kpi.label}</span>
-            <span className="text-[26px] leading-tight font-semibold tracking-tight text-ink">{kpi.value}</span>
-            <span
+        {kpis.map((kpi, index) => {
+          const TrendIcon = kpi.tone === "up" ? ArrowUpRight : kpi.tone === "down" ? ArrowDownRight : null;
+          return (
+            // Celular: nome, número e detalhe empilhados (lado a lado não cabe em meia tela).
+            // A partir de sm: nome e detalhe na mesma linha, número embaixo.
+            <div
+              key={kpi.label}
+              title={kpi.hint}
               className={cn(
-                "text-xs",
-                "tone" in kpi && kpi.tone === "up" ? "text-success" : "tone" in kpi && kpi.tone === "down" ? "text-danger" : "text-ink-3",
+                "grid min-w-0 grid-cols-[minmax(0,1fr)_auto] content-start items-center gap-x-2 gap-y-1 border-line px-4 py-3",
+                index % 2 === 0 && "border-r",
+                index < 2 && "border-b xl:border-b-0",
+                index === 1 && "xl:border-r",
+                index === 2 && "xl:border-r",
               )}
             >
-              {kpi.caption}
-            </span>
-          </div>
-        ))}
+              <span className="col-span-2 truncate text-xs text-ink-3 sm:col-span-1">{kpi.label}</span>
+              <span
+                className={cn(
+                  "order-last col-span-2 inline-flex items-center gap-0.5 text-[11.5px] tabular-nums sm:order-none sm:col-span-1 sm:justify-self-end",
+                  kpi.tone === "up" ? "font-medium text-success" : kpi.tone === "down" ? "font-medium text-danger" : "text-ink-4",
+                )}
+              >
+                {TrendIcon ? <TrendIcon className="size-3" aria-hidden /> : null}
+                {kpi.meta}
+                <span className="sr-only">. {kpi.hint}</span>
+              </span>
+              <p className="col-span-2 text-xl leading-7 font-semibold tracking-tight text-ink tabular-nums">
+                {kpi.value}
+                {kpi.suffix ? <span className="ml-1 text-xs font-normal tracking-normal text-ink-3">{kpi.suffix}</span> : null}
+              </p>
+            </div>
+          );
+        })}
       </Card>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
@@ -372,7 +391,7 @@ function DashboardSkeleton() {
         <Skeleton className="h-9 w-72" />
         <Skeleton className="h-9 w-96 max-w-full" />
       </div>
-      <Skeleton className="h-28 w-full rounded-xl" />
+      <Skeleton className="h-[74px] w-full rounded-xl" />
       <div className="grid gap-4 lg:grid-cols-2">
         <Skeleton className="h-64 rounded-xl" />
         <Skeleton className="h-64 rounded-xl" />

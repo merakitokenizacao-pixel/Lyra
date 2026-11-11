@@ -7,7 +7,12 @@ export type TabItem = { key: string; label: string; href: string; count?: number
 /** Abas como links (estado na URL), com sublinhado azul no item ativo. */
 export function LinkTabs({ items, active, className }: { items: TabItem[]; active: string; className?: string }) {
   return (
-    <nav className={cn("flex gap-5 overflow-x-auto border-b border-line px-4 sm:px-6", className)} aria-label="Filtros">
+    // A linha de baixo é uma sombra interna (não borda): o sublinhado da aba ativa cobre a linha
+    // sem sair da caixa, e a rolagem horizontal não ganha 1px de rolagem vertical junto.
+    <nav
+      className={cn("no-scrollbar flex gap-5 overflow-x-auto px-4 shadow-[inset_0_-1px_0_var(--line)] sm:px-6", className)}
+      aria-label="Filtros"
+    >
       {items.map((item) => {
         const isActive = item.key === active;
         return (
@@ -17,7 +22,7 @@ export function LinkTabs({ items, active, className }: { items: TabItem[]; activ
             scroll={false}
             aria-current={isActive ? "page" : undefined}
             className={cn(
-              "relative -mb-px flex h-10 shrink-0 items-center gap-1.5 border-b-2 text-[13px] transition-colors",
+              "relative flex h-10 shrink-0 items-center gap-1.5 border-b-2 text-[13px] transition-colors",
               isActive ? "border-accent font-medium text-ink" : "border-transparent text-ink-3 hover:text-ink",
             )}
           >

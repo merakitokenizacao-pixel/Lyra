@@ -29,7 +29,7 @@ async function InviteAwareSignup({ searchParams }: { searchParams: SearchParams 
 function SignupCard({ invitedEmail }: { invitedEmail?: string }) {
   return (
     <AuthCard
-      title={invitedEmail ? "Seu time te espera." : "Comece com o Lyra."}
+      title={invitedEmail ? "Seu time te espera." : "Comece com o Lyro."}
       muted={invitedEmail ? "Crie sua conta para entrar." : "Leva menos de um minuto."}
     >
       <SignupForm invitedEmail={invitedEmail} />

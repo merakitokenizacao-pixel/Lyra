@@ -13,6 +13,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { switchOrganization } from "@/app/(app)/shell-actions";
+import { cn } from "@/lib/utils";
+import { SIDEBAR_FADE } from "./sidebar";
+import { useSidebarCollapsed } from "./sidebar-state";
 
 export function UserMenuClient({
   name,
@@ -20,27 +23,37 @@ export function UserMenuClient({
   orgName,
   orgId,
   orgs,
+  collapsible = false,
 }: {
   name: string;
   email: string;
   orgName: string;
   orgId: string;
   orgs: { id: string; name: string }[];
+  collapsible?: boolean;
 }) {
   const signOutForm = useRef<HTMLFormElement>(null);
+  const collapsed = useSidebarCollapsed();
+  // Com o menu recolhido, abre ao lado do avatar em vez de em cima dele
+  const beside = collapsible && collapsed;
 
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-left outline-none hover:bg-black/[0.035] focus-visible:ring-2 focus-visible:ring-accent/40 data-[state=open]:bg-black/[0.05]">
+        <DropdownMenuTrigger className="flex w-full cursor-pointer items-center gap-2.5 overflow-hidden rounded-lg px-2 py-1.5 text-left outline-none transition-[padding] duration-200 hover:bg-black/[0.035] focus-visible:ring-2 focus-visible:ring-accent/40 data-[state=open]:bg-black/[0.05] collapsed:px-0.5 motion-reduce:transition-none">
           <Avatar name={name} />
-          <span className="min-w-0 flex-1">
+          <span className={cn("min-w-0 flex-1", SIDEBAR_FADE)}>
             <span className="block truncate text-[13px] font-medium text-ink">{name}</span>
             <span className="block truncate text-xs text-ink-3">{orgName}</span>
           </span>
-          <ChevronsUpDown className="size-3.5 shrink-0 text-ink-4" />
+          <ChevronsUpDown className={cn("size-3.5 shrink-0 text-ink-4", SIDEBAR_FADE)} />
         </DropdownMenuTrigger>
-        <DropdownMenuContent side="top" align="start" className="w-60">
+        <DropdownMenuContent
+          side={beside ? "right" : "top"}
+          align={beside ? "end" : "start"}
+          sideOffset={beside ? 14 : 6}
+          className="w-60"
+        >
           <DropdownMenuLabel>
             <span className="block truncate font-medium text-ink">{name}</span>
             <span className="block truncate">{email}</span>

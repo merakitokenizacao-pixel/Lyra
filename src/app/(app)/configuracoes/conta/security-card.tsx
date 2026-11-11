@@ -19,7 +19,7 @@ export type PendingEmailChange = { email: string; since: string } | null;
 export function SecurityCard({ email, pendingEmail }: { email: string; pendingEmail: PendingEmailChange }) {
   return (
     <Card id="acesso" className="scroll-mt-20 lg:scroll-mt-24">
-      <CardHeader title="Acesso e segurança" description="Como você entra no Lyra. Vale para todas as suas empresas." />
+      <CardHeader title="Acesso e segurança" description="Como você entra no Lyro. Vale para todas as suas empresas." />
       <div className="divide-y divide-line border-t border-line">
         <EmailSetting email={email} pending={pendingEmail} />
         <PasswordSetting email={email} />

@@ -20,7 +20,7 @@ export default function AccountPage() {
     <div className="flex flex-col gap-6">
       <SettingsTitle
         title="Minha conta"
-        description="Seus dados pessoais e o seu acesso ao Lyra. Valem para todas as empresas em que você está."
+        description="Seus dados pessoais e o seu acesso ao Lyro. Valem para todas as empresas em que você está."
       />
       <Suspense fallback={<AccountSkeleton />}>
         <AccountContent />
@@ -77,7 +77,7 @@ async function AccountContent() {
       <SecurityCard email={email} pendingEmail={pendingEmailChange(auth.user)} />
 
       <Card>
-        <CardHeader title="Suas empresas" description="Onde você tem acesso no Lyra e com qual papel." />
+        <CardHeader title="Suas empresas" description="Onde você tem acesso no Lyro e com qual papel." />
         <ul className="divide-y divide-line border-t border-line">
           {ctx.orgs.map((org) => (
             <li key={org.id} className="flex items-center gap-3 px-4 py-3 sm:px-5">

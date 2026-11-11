@@ -63,7 +63,7 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
 
 /**
  * "Esqueci minha senha": manda o link para criar uma senha nova. A tela responde
- * igual exista ou não uma conta com o e-mail, para não revelar quem usa o Lyra.
+ * igual exista ou não uma conta com o e-mail, para não revelar quem usa o Lyro.
  */
 export async function requestPasswordReset(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const email = str(formData, "email")?.toLowerCase();

@@ -17,12 +17,12 @@ type Member = { id: string; name: string; email: string | null; jobTitle: string
 type Invite = { id: string; email: string; role: MemberRole; createdAt: string; invitedBy: string | null };
 
 const ROLE_HELP: Record<MemberRole, string> = {
-  owner: "Criou a empresa no Lyra. Tem acesso a tudo e não pode ser removido.",
+  owner: "Criou a empresa no Lyro. Tem acesso a tudo e não pode ser removido.",
   admin: "Altera os dados da empresa e as etapas do pipeline e gerencia o time.",
   member: "Trabalha com leads, clientes, propostas e produtos.",
 };
 
-/** O Lyra não envia e-mail de convite: o link abre o cadastro com o e-mail já preenchido. */
+/** O Lyro não envia e-mail de convite: o link abre o cadastro com o e-mail já preenchido. */
 async function copyInviteLink(email: string) {
   try {
     await navigator.clipboard.writeText(`${window.location.origin}/signup?convite=1&email=${encodeURIComponent(email)}`);
@@ -90,7 +90,7 @@ export function TeamSection({
                   </Select>
                   <ConfirmDialog
                     title={`Remover ${member.name} do time?`}
-                    description="A pessoa perde o acesso a esta empresa no Lyra. Leads, clientes e propostas que ela criou continuam aqui."
+                    description="A pessoa perde o acesso a esta empresa no Lyro. Leads, clientes e propostas que ela criou continuam aqui."
                     confirmLabel="Remover"
                     action={() => removeMember(member.id)}
                     trigger={
@@ -172,7 +172,7 @@ export function TeamSection({
         >
           <p className="text-[13px] font-medium text-ink">Convidar para o time</p>
           <p className="mt-0.5 text-xs leading-relaxed text-ink-3">
-            O Lyra cria um link de convite: envie para a pessoa por e-mail ou WhatsApp. Ela entra no time assim que criar a conta com
+            O Lyro cria um link de convite: envie para a pessoa por e-mail ou WhatsApp. Ela entra no time assim que criar a conta com
             este e-mail.
           </p>
           <div className="mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_150px_auto]">

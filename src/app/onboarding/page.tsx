@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { LyraLogo } from "@/components/brand";
+import { LyroLogo } from "@/components/brand";
 import { Skeleton } from "@/components/ui/misc";
 import { getSupabase, getUser } from "@/lib/auth";
 import { AuthCard } from "@/app/(auth)/auth-card";
@@ -14,7 +14,7 @@ export default function OnboardingPage() {
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-canvas">
       <div className="grid-frame pointer-events-none absolute inset-0" aria-hidden />
       <header className="relative z-10 flex h-16 items-center justify-between px-5 sm:px-8">
-        <LyraLogo />
+        <LyroLogo />
         <form action="/auth/signout" method="post">
           <button type="submit" className="cursor-pointer text-[13px] text-ink-3 hover:text-ink">
             Sair
